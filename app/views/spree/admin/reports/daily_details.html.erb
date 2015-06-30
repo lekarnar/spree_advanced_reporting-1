@@ -20,7 +20,7 @@
   This report contains credit card payments that were captured on this date.
 </p>
 
-<table>
+<table class="table">
   <tr>
     <th>SKU</th>
     <th>Item</th>
@@ -90,7 +90,7 @@
 
   <% if @report.payments.present? %>
     <a href='#' data-details='payment_details'>Show details...</a>
-    <table>
+    <table class="table">
       <tr>
         <th>Card Type</th>
         <th>Quantity</th>
