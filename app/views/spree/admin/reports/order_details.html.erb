@@ -1,0 +1,73 @@
+<% content_for :page_title do %>
+  Order Details,
+  <% if params[:begin_date] && params[:end_date] %>
+    <%= params[:begin_date] %> to <%= params[:end_date] %>
+  <% else %>
+    <%= 1.month.ago.strftime('%m/%d/%Y') %> to <%= Time.now.strftime('%m/%d/%Y') %>
+  <% end %>
+<% end %>
+
+
+<% content_for :table_filter_title do %>
+  <%= Spree.t(:date_range) %>
+<% end %>
+
+<% content_for :table_filter do %>
+  <% form_tag({}, { method: :get }) do %>
+    <div class="row">
+      <div class="col-sm-6">
+        <%= label_tag nil, t(:start), class: 'inline' %>
+        <%= text_field_tag :begin_date,
+          (Time.now - 1.month).beginning_of_day,
+          {
+            class: 'datepicker datepicker-from form-control',
+            required: true
+          }
+        %>
+      </div>
+
+      <div class="col-sm-6">
+        <%= label_tag nil, t(:end), class: 'inline' %>
+        <%= text_field_tag :end_date,
+          Time.now.end_of_day,
+          {
+            class: 'datepicker datepicker-to form-control',
+            required: true
+          }
+        %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-8">
+        <%= submit_tag 'Search', class: 'btn btn-success' %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<%= link_to 'Download CSV', params.merge({url: spree.order_details_admin_reports_path, format: 'csv'}) %>
+
+<table class="table">
+  <tr>
+    <th>Order Number</th>
+    <th>Completed</th>
+    <th>Sku</th>
+    <th>Quantity</th>
+    <th>Unit Price</th>
+    <th>Amount</th>
+    <th>Tranaction ID</th>
+  </tr>
+
+  <% @report.line_items.each do |line| %>
+    <tr>
+      <td><%= line.number %></td>
+      <td><%= line.completed_date %></td>
+      <td><%= line.sku %></td>
+      <td><%= line.quantity %></td>
+      <td><%= line.unit_price %></td>
+      <td><%= line.amount %></td>
+      <td><%= line.transaction_id %></td>
+    </tr>
+  <% end %>
+</table>
+
