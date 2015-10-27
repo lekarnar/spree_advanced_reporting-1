@@ -33,12 +33,26 @@ module Spree
             order.completed_at.strftime('%m/%d/%Y'),
             li.variant.sku,
             li.quantity,
-            li.cost_price.to_f,
             li.price.to_f,
+            (li.price * li.quantity).to_f,
             transaction_id
           )
         end
-        #TODO: Tax payed as line
+
+        # Tax and whole-order adjustments
+        order.all_adjustments.each do |adj|
+
+          lines << ReportLine.new(
+            order.number,
+            order.completed_at.strftime('%m/%d/%Y'),
+            adj.label,
+            nil,
+            nil,
+            adj.amount.to_f,
+            transaction_id
+          )
+        end
+
       end
       lines
     end
