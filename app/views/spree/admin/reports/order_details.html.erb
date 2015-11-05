@@ -8,17 +8,15 @@
 <% end %>
 
 
-<% content_for :table_filter_title do %>
-  <%= Spree.t(:date_range) %>
-<% end %>
+<h3><%= Spree.t(:date_range) %></h3>
 
-<% content_for :table_filter do %>
-  <% form_tag({}, { method: :get }) do %>
-    <div class="row">
-      <div class="col-sm-6">
-        <%= label_tag nil, t(:start), class: 'inline' %>
-        <%= text_field_tag :begin_date,
-          (Time.now - 1.month).beginning_of_day,
+<%= form_tag({}, { method: :get, class: 'form-inline' }) do %>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <%= label_tag 'begin_date', t(:start), class: 'inline' %>
+        <%= text_field_tag 'begin_date',
+          (Time.now - 1.month).beginning_of_day.strftime('%Y/%m/%d'),
           {
             class: 'datepicker datepicker-from form-control',
             required: true
@@ -26,23 +24,19 @@
         %>
       </div>
 
-      <div class="col-sm-6">
-        <%= label_tag nil, t(:end), class: 'inline' %>
-        <%= text_field_tag :end_date,
-          Time.now.end_of_day,
+      <div class="form-group">
+        <%= label_tag 'end_date', t(:end), class: 'inline' %>
+        <%= text_field_tag 'end_date',
+          Time.now.end_of_day.strftime('%Y/%m/%d'),
           {
             class: 'datepicker datepicker-to form-control',
             required: true
           }
         %>
       </div>
+      <%= submit_tag 'Search', class: 'btn btn-success' %>
     </div>
-    <div class="row">
-      <div class="col-sm-4 col-sm-offset-8">
-        <%= submit_tag 'Search', class: 'btn btn-success' %>
-      </div>
-    </div>
-  <% end %>
+  </div>
 <% end %>
 
 <%= link_to 'Download CSV', params.merge({url: spree.order_details_admin_reports_path, format: 'csv'}) %>
