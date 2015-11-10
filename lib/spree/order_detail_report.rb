@@ -26,8 +26,8 @@ module Spree
         else
           transaction_id = 'pending'
         end
-        order.line_items.each do |li|
 
+        order.line_items.each do |li|
           lines << ReportLine.new(
             order.number,
             order.completed_at.strftime('%m/%d/%Y'),
@@ -41,7 +41,6 @@ module Spree
 
         # Tax and whole-order adjustments
         order.all_adjustments.each do |adj|
-
           lines << ReportLine.new(
             order.number,
             order.completed_at.strftime('%m/%d/%Y'),
@@ -51,6 +50,21 @@ module Spree
             adj.amount.to_f,
             transaction_id
           )
+        end
+
+        # Shipments
+        if order.ship_total?
+          order.shipments.each do |shipment|
+            lines << ReportLine.new(
+              order.number,
+              order.completed_at.strftime('%m/%d/%Y'),
+              shipment.shipping_method.name,
+              nil,
+              nil,
+              shipment.cost.to_f,
+              transaction_id
+            )
+          end
         end
 
       end
