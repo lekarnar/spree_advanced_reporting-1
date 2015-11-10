@@ -52,8 +52,15 @@
     <th>Tranaction ID</th>
   </tr>
 
-  <% @report.line_items.each do |line| %>
-    <tr>
+  <% @report.line_items.each_with_index do |line, index| %>
+    <% if index == 0 %>
+      <% @line = line.number %>
+    <% end %>
+    <% if line.number != @line %>
+      <% @active = !@active %>
+    <% end %>
+
+    <tr class="<%= @active ? 'active' : nil %>">
       <td><%= line.number %></td>
       <td><%= line.completed_date %></td>
       <td><%= line.sku %></td>
@@ -62,6 +69,10 @@
       <td><%= line.amount %></td>
       <td><%= line.transaction_id %></td>
     </tr>
+
+    <%# Set the @line var to line.number so we know when we've hit a new order %>
+
+    <% @line = line.number %>
   <% end %>
 </table>
 

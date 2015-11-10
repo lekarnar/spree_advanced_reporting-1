@@ -61,6 +61,8 @@ Spree::Admin::ReportsController.class_eval do
   end
 
   def order_details
+    @line = nil
+    @active = false
     @report = Spree::OrderDetailReport.new(params)
     respond_to do |format|
       format.html { render template: 'spree/admin/reports/order_details' }
