@@ -10,7 +10,12 @@ module Spree
       end
 
       @orders = Order.
-        eager_load(:payments, line_items: [:variant]).
+        eager_load(
+          :all_adjustments,
+          :valid_payments,
+          shipments: [:selected_shipping_method],
+          line_items: [:variant]
+        ).
         where(completed_at: [@begin_date..@end_date]).
         where("spree_payments.state = 'completed'").
         order(:completed_at)
@@ -20,9 +25,9 @@ module Spree
       lines = []
 
       @orders.each do |order|
-        if order.payments.any?
+        if order.valid_payments.any?
           # Assume that there is only one completed transaction per order
-          transaction_id = order.payments.first.response_code
+          transaction_id = order.valid_payments.first.response_code
         else
           transaction_id = 'pending'
         end
@@ -58,7 +63,7 @@ module Spree
             lines << ReportLine.new(
               order.number,
               order.completed_at.strftime('%m/%d/%Y'),
-              shipment.shipping_method.name,
+              shipment.selected_shipping_method.name,
               nil,
               nil,
               shipment.cost.to_f,
