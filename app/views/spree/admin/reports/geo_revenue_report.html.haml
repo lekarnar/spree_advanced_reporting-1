@@ -1,0 +1,20 @@
+- content_for :page_title do
+  Revenue by Geography
+  %small Revenue divided geographically, into states and countries
+
+-# Ransack's search_form_tag method doesn't work in this context,
+-# so build the form manually
+= form_tag({}, { method: :get, class: 'form-inline'}) do
+  .row
+    .col-sm-12
+      .form-group
+        = label_tag 'q[completed_at_gt]', t('start'), class: 'inline'
+        = text_field_tag 'q[completed_at_gt]',
+          params.key?(:q) ? params[:q]['completed_at_gt'] : Time.current.strftime('%Y/%m/%d'),
+          class: 'datepicker datepicker-to form-control'
+      .form-group
+        = label_tag 'q[completed_at_lt]', t('end'), class: 'inline'
+        = text_field_tag 'q[completed_at_lt]',
+          params.key?(:q) ? params[:q]['completed_at_lt'] : (Time.current - 1.month).beginning_of_day.strftime('%Y/%m/%d'),
+          class: 'datepicker datepicker-from form-control'
+      = submit_tag 'Search', class: 'btn btn-success'

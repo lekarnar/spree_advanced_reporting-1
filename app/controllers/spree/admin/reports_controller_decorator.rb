@@ -46,8 +46,9 @@ Spree::Admin::ReportsController.class_eval do
   end
 
   def geo_revenue
-    @report = Spree::AdvancedReport::GeoReport::GeoRevenue.new(params)
-    geo_report_render('geo_revenue')
+    @report = Spree::GeoRevenueReport.new(params)
+    render 'spree/admin/reports/geo_revenue_report'
+    # render json: @report.orders
   end
 
   def geo_units
