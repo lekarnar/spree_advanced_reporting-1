@@ -63,15 +63,14 @@ module Spree
             lines << ReportLine.new(
               order.number,
               order.completed_at.strftime('%m/%d/%Y'),
-              shipment.selected_shipping_method.name,
+              shipment.try(:selected_shipping_method).try(:name),
               nil,
               nil,
-              shipment.cost.to_f,
+              shipment.try(:cost).try(:to_f),
               transaction_id
             )
           end
         end
-
       end
       lines
     end
