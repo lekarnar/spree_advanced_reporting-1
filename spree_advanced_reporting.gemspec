@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.has_rdoc = true
 
-  s.add_dependency('spree_core', '~> 3.0.0')
+  s.add_dependency('spree_core', '~> 3.1.0')
   s.add_dependency('ruport', '>= 1.6.3')
   s.add_dependency('ruport-util') #, :lib => 'ruport/util')
 end
