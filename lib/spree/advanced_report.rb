@@ -1,7 +1,7 @@
 module Spree
   class AdvancedReport
     include Ruport
-    attr_accessor :orders, :product_text, :date_text, :taxon_text, :ruportdata, :data, :params, :taxon, :product, :product_in_taxon, :unfiltered_params
+    attr_accessor :orders, :product_text, :date_text, :taxon_text, :ruportdata, :data, :params, :taxon, :product, :product_in_taxon, :unfiltered_params, :subscriptions, :subscription_seats
 
     def name
       "Base Advanced Report"
@@ -16,6 +16,8 @@ module Spree
       self.data = {}
       self.ruportdata = {}
       self.unfiltered_params = params[:search].blank? ? {} : params[:search].clone
+      self.subscriptions = Spree::AccountSubscription.all
+      self.subscription_seats = Spree::SubscriptionSeat.all
 
       params[:search] ||= {}
       if params[:search][:completed_at_gt].blank?

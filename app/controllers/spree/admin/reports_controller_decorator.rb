@@ -8,6 +8,10 @@ Spree::Admin::ReportsController.class_eval do
     if defined?(MultiDomainExtension)
       @stores = Store.all
     end
+
+    @subscriptions = Spree::AccountSubscription.all
+    @subscription_seats = Spree::SubscriptionSeat.all
+
   end
 
   def revenue
@@ -29,6 +33,24 @@ Spree::Admin::ReportsController.class_eval do
     @report = Spree::AdvancedReport::IncrementReport::Profit.new(params)
     base_report_render('profit')
   end
+
+
+  def subscriptions
+    @report = Spree::AdvancedReport::SubscriptionReport::Units.new(params)
+    base_report_render('units')
+  end
+
+  def subscription_seats_in_use
+    @report = Spree::AdvancedReport::SubscriptionSeatReport::Units.new(params)
+    base_report_render('units')
+  end
+
+
+  def subscription_revenue
+    @report = Spree::AdvancedReport::SubscriptionReport::Revenue.new(params)
+    base_report_render('revenue')
+  end
+
 
   def count
     @report = Spree::AdvancedReport::IncrementReport::Count.new(params)
@@ -78,6 +100,9 @@ Spree::Admin::ReportsController.class_eval do
       :profit,
       :revenue,
       :units,
+      :subscriptions,
+      :subscription_seats_in_use,
+      :subscription_revenue,
       :top_products,
       :top_customers,
       :geo_revenue,
