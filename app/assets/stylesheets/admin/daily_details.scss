@@ -10,13 +10,17 @@ h2 {
 #date_form {
   float: right;
   border: 1px solid #cee1f4;
+  margin-top: 15px;
 
   form {
     margin: 20px;
-    margin-left: 40px;
-
+    //margin-left: 40px;
+    display: flex;
     input {
       margin: 0 10px;
+    }
+    span {
+      margin-top: 10px;
     }
   }
 }
