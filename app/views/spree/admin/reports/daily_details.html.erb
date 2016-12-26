@@ -9,8 +9,9 @@
 
 <div id='date_form'>
   <%= form_tag daily_details_admin_reports_path, method: 'GET' do %>
-    Date: <input class='datepicker' name='date' value='<%= @report.date %>'>
-    <%= submit_tag "Show Payments" %>
+    <span>Date:</span>
+    <input class='datepicker form-control' name='date' value='<%= @report.date %>'>
+    <%= submit_tag "Show Payments", :class => "btn btn-primary" %>
   <% end %>
 </div>
 

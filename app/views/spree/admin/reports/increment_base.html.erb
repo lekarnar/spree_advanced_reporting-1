@@ -1,85 +1,108 @@
 <% content_for :page_title do %>
-  <%= Spree.t('adv_report.' + @report.name.downcase) %> &middot; <small><%= @report.description %></small>
+  <%= t('adv_report.' + @report.name.downcase) %> &middot; <small><%= @report.description %></small>
 <% end %>
 
 <% content_for :page_actions do %>
-    <li><%= link_to_with_icon 'icon-arrow-left', Spree.t(:back_to_reports_list), spree.admin_reports_url, :class => 'button' %></li>
+    <li><%= link_to spree.admin_reports_url, :class => 'button btn btn-primary' do %>
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span><%= Spree.t(:back_to_reports_list) %>
+      <% end %>
+    </li>
 <% end %>
 
 <% content_for :sidebar_title do %>
   <% Spree.t(:report_details) %>
 <% end %>
 
-<% content_for :sidebar do %>
-  <nav class="menu">
-    <ul class="show_data">
+<%# content_for :sidebar do %>
+    <%= content_tag :total do %>
+        <h5>
+          <label>Skupaj:</label> <%= @report.format_total %>
+        </h5><br />
+    <% end %>
+    <%= content_tag :daterange do %>
+      <a href="#"><%= @report.params['search']['completed_at_gt'].strftime('%m-%d-%Y') %></a>
+      <span class="range-divider">
+        <i class="icon-arrow-right"></i>
+      </span>
+      <a href="#"><%= @report.params['search']['completed_at_lt'].strftime('%m-%d-%Y') %></a>
+      <div class="links">
+          <%= link_to_with_icon 'icon-tasks', Spree.t(:csv), @report.download_url(request.fullpath, 'csv', 'all') %>
+      </div>
+    <% end %>
+
+    <ul class="nav nav-tabs show_data">
       <%= content_tag :li do %>
         <%= raw @report.taxon_text %>
       <% end %>
       <%= content_tag :li do %>
         <%= raw @report.product_text %>
       <% end %>
-      <%= content_tag :li do %>
-          <h5>
-            <label>Total:</label> <%= @report.format_total %>
-          </h5><br />
-      <% end %>
-      <%= content_tag :li do %>
-        <label><%= @report.params['search']['completed_at_gt'].strftime('%m-%d-%Y') %></label>
-        <span class="range-divider">
-          <i class="icon-arrow-right"></i>
-        </span>
-        <label><%= @report.params['search']['completed_at_lt'].strftime('%m-%d-%Y') %></label>
-        <div class="links">
-            <%= link_to_with_icon 'icon-tasks', Spree.t(:csv), @report.download_url(request.fullpath, 'csv', 'all') %>
-        </div>
-      <% end %>
+
+
       <% @report.increments.each do |inc| %>
-        <%= content_tag :li, class: ('selected' if inc == :daily), id: inc.to_s do %>
-            <label><%= inc.to_s.capitalize %></label>
-            <%= link_to_with_icon 'icon-tasks', Spree.t(:csv), @report.download_url(request.fullpath, 'csv', inc.to_s) %>
+        <%= content_tag :li, class: ('active' if inc == :daily) do %>
+          <a href="#<%= inc.to_s%>" data-toggle="tab"><%= inc.to_s.upcase %></a>
+          <%#= link_to_with_icon 'icon-tasks', Spree.t(:csv), @report.download_url(request.fullpath, 'csv', inc.to_s) %>
         <% end %>
       <% end %>
     </ul>
-  </nav>
-<% end %>
+
+<%# end %>
 
 <% content_for :head do %>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-        google.load('visualization', '1', {'packages': ['corechart']});
-    </script>
-    <script type="text/javascript">
-        google.setOnLoadCallback(drawChart);
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+      google.load('visualization', '1', {'packages': ['corechart']});
+  </script>
+  <script type="text/javascript">
+      google.setOnLoadCallback(drawChart);
 
-        function drawChart() {
-        <% @report.increments.each do |type| %>
-            var data_<%= type.to_s %> = new google.visualization.DataTable();
-            data_<%= type.to_s %>.addColumn('string', 'Display');
-            data_<%= type.to_s %>.addColumn('number', '<%= @report.name %>');
-            data_<%= type.to_s %>.addRows(<%= @report.ruportdata[type].size %>);
-          <% @report.ruportdata[type].each_with_index do |p, i| %>
-            data_<%= type.to_s %>.setValue(<%= i.to_s %>, 0, "<%= p.data[type.to_s.capitalize] %>");
-            data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p.data[@report.column].to_s.gsub(/^\$/, '') %>);
-          <% end %>
-            var chart_<%= type.to_s %> = new google.visualization.ColumnChart(document.getElementById('<%= type.to_s %>_chart'));
-            chart_<%= type.to_s %>.draw(data_<%= type.to_s %>, {
-                width: 700,
-                height: 400,
-                legend: 'none',
-                hAxis: { slantedText: true, slantedTextAngle: 30 },
-                title: '<%= type.to_s.capitalize + ' ' + @report.name %>'
-            });
+      function drawChart() {
+      <% @report.increments.each do |type| %>
+          var data_<%= type.to_s %> = new google.visualization.DataTable();
+          data_<%= type.to_s %>.addColumn('string', 'Display');
+          data_<%= type.to_s %>.addColumn('number', '<%= @report.name %>');
+          data_<%= type.to_s %>.addRows(<%= @report.ruportdata[type].size %>);
+        <% @report.ruportdata[type].data.reverse.each_with_index do |p, i| %>
+          data_<%= type.to_s %>.setValue(<%= i.to_s %>, 0, "<%= p[type.to_s.capitalize] %>");
+          data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p[@report.column].to_s.gsub(/^\$/, '') %>);
         <% end %>
-        }
-    </script>
+          var chart_<%= type.to_s %> = new google.visualization.ColumnChart(document.getElementById('<%= type.to_s %>_chart'));
+          chart_<%= type.to_s %>.draw(data_<%= type.to_s %>, {
+              width: 700,
+              height: 400,
+              legend: 'none',
+              hAxis: { slantedText: true, slantedTextAngle: 30 },
+              title: '<%= type.to_s.capitalize + ' ' + @report.name %>'
+          });
+      <% end %>
+      }
+  </script>
 <% end %>
 
 <%= render :partial => 'spree/admin/reports/advanced_report_criteria', :locals => {} %>
 
-<% @report.increments.each do |type| %>
-    <div id="<%= type.to_s %>_data" <%= 'style=display:none;' if type.to_s != 'daily' %> class="advanced_reporting_data">
-        <div id="<%= type.to_s %>_chart"></div>
-        <%= raw @report.ruportdata[type].to_html %>
+<div class="tab-content">
+  <% @report.increments.each do |type| %>
+    <div class="tab-pane <%= 'active' if type == :daily %>" id="<%= type.to_s %>">
+      <div style="padding-left:20px; padding-top:20px;">
+        <%= link_to @report.download_url(request.fullpath, 'csv', type.to_s), :class => "btn btn-primary", :style => "text-transform: uppercase;" do %>
+          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> <%= Spree.t(:csv) %>
+        <% end %>
+      </div>
+      <div id="<%= type.to_s %>_data" class="advanced_reporting_data">
+          <div id="<%= type.to_s %>_chart"></div>
+          <%= raw @report.ruportdata[type].to_html %>
+          <script>
+            $('.tablesorter').addClass('table table-bordered');
+          </script>
+      </div>
     </div>
-<% end %>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  $('.nav-tabs.show_data li a').on("click", function(){
+    $(this).tab('show');
+  });
+</script>

@@ -13,17 +13,17 @@
       <% if @taxons %>
         <%= t :taxons %>: <%= collection_select(:advanced_reporting, :taxon_id, @taxons, :id, :name, { :include_blank => 'All' }, { class: 'form-control' } ) %>
       <% end %>
-      <%= t :products %>: <%= collection_select(:advanced_reporting, :product_id, @products, :id, :name, { :include_blank => 'All' }, { class: 'form-control' } ) %>
+      <!-- <%#= t :products %>: <%#= collection_select(:advanced_reporting, :product_id, @products, :id, :name, { :include_blank => 'All' }, { class: 'form-control' } ) %> -->
       </div>
 
       <div class="date-range-filter field align-center">
         <div class="col-sm-6">
-          <%= label_tag nil, t(:start), class: 'inline' %>
+          <%= label_tag nil, Spree.t(:start), class: 'inline' %>
           <%= s.text_field :created_at_gt, class: 'datepicker datepicker-from form-control' %>
         </div>
 
         <div class="col-sm-6">
-          <%= label_tag nil, t(:end), class: 'inline' %>
+          <%= label_tag nil, Spree.t(:end), class: 'inline' %>
           <%= s.text_field :created_at_lt, class: 'datepicker datepicker-to form-control' %>
         </div>
       </div>
