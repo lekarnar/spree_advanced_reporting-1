@@ -18,5 +18,13 @@ Spree::Core::Engine.add_routes do
         get :order_details
       end
     end
+
+    resources :reports, only: [:index] do
+      collection do
+        get :sales_total
+        post :sales_total
+      end
+    end
+
   end
 end
