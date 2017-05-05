@@ -13,41 +13,24 @@
   <% Spree.t(:report_details) %>
 <% end %>
 
-<%# content_for :sidebar do %>
-    <%= content_tag :total do %>
-        <h5>
-          <label>Skupaj:</label> <%= @report.format_total %>
-        </h5><br />
-    <% end %>
-    <%= content_tag :daterange do %>
-      <a href="#"><%= @report.params['search']['completed_at_gt'].strftime('%m-%d-%Y') %></a>
-      <span class="range-divider">
-        <i class="icon-arrow-right"></i>
-      </span>
-      <a href="#"><%= @report.params['search']['completed_at_lt'].strftime('%m-%d-%Y') %></a>
-      <div class="links">
-          <%= link_to_with_icon 'icon-tasks', Spree.t(:csv), @report.download_url(request.fullpath, 'csv', 'all') %>
-      </div>
-    <% end %>
+<div class="report_details">
+  <div class="links">
+      <a href="<%= @report.download_url(request.fullpath, 'csv', "all") %>">CSV</a>
+  </div>
+  <label><%== @report.product_text %></label><br />
+  <label><%== @report.taxon_text %></label><br />
+  <label><%== @report.date_text %></label><br />
+  <label>Skupaj: <span><%= @report.format_total %></span></label>
+</div>
 
-    <ul class="nav nav-tabs show_data">
-      <%= content_tag :li do %>
-        <%= raw @report.taxon_text %>
-      <% end %>
-      <%= content_tag :li do %>
-        <%= raw @report.product_text %>
-      <% end %>
-
-
-      <% @report.increments.each do |inc| %>
-        <%= content_tag :li, class: ('active' if inc == :daily) do %>
-          <a href="#<%= inc.to_s%>" data-toggle="tab"><%= inc.to_s.upcase %></a>
-          <%#= link_to_with_icon 'icon-tasks', Spree.t(:csv), @report.download_url(request.fullpath, 'csv', inc.to_s) %>
-        <% end %>
-      <% end %>
-    </ul>
-
-<%# end %>
+<ul id="show_data">
+  <% @report.increments.each do |inc| %>
+    <li <%= 'class=selected' if inc == :daily %> id="<%= inc.to_s %>">
+      <label><%= inc.to_s.capitalize %></label><br />
+      <a href="<%= @report.download_url(request.path, 'csv', inc.to_s) %>">CSV</a>
+    </li>
+  <% end %>
+</ul>
 
 <% content_for :head do %>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -85,11 +68,6 @@
 <div class="tab-content">
   <% @report.increments.each do |type| %>
     <div class="tab-pane <%= 'active' if type == :daily %>" id="<%= type.to_s %>">
-      <div style="padding-left:20px; padding-top:20px;">
-        <%= link_to @report.download_url(request.fullpath, 'csv', type.to_s), :class => "btn btn-primary", :style => "text-transform: uppercase;" do %>
-          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> <%= Spree.t(:csv) %>
-        <% end %>
-      </div>
       <div id="<%= type.to_s %>_data" class="advanced_reporting_data">
           <div id="<%= type.to_s %>_chart"></div>
           <%= raw @report.ruportdata[type].to_html %>

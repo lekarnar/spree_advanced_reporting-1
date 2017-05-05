@@ -21,8 +21,8 @@ module Spree
 
       params[:search] ||= {}
       if params[:search][:completed_at_gt].blank?
-        if (Order.count > 0) && Order.minimum(:completed_at)
-          params[:search][:completed_at_gt] = Order.minimum(:completed_at).beginning_of_day
+        if (Order.count > 0) #&& Order.minimum(:completed_at)
+          params[:search][:completed_at_gt] = (Time.now - 30.days).beginning_of_day #Order.minimum(:completed_at).beginning_of_day
         end
       else
         params[:search][:completed_at_gt] = Time.zone.parse(params[:search][:completed_at_gt]).beginning_of_day rescue ""
@@ -56,27 +56,33 @@ module Spree
       end
 
       if self.product
-        self.product_text = "<label>Product:</label> #{self.product.name}"
+        self.product_text = "<label>Product:</label> <span>#{self.product.name}</span>"
       end
       if self.taxon
-        self.taxon_text = "<label>Taxon:</label> #{self.taxon.name}"
+        self.taxon_text = "<label>Taxon:</label> <span>#{self.taxon.name}</span>"
       end
 
       # Above searchlogic date settings
-      self.date_text = "Date Range:"
+      self.date_text = "Med datumi:"
+
       if self.unfiltered_params
-        if self.unfiltered_params[:completed_at_gt] != '' && self.unfiltered_params[:completed_at_lt] != ''
-          self.date_text += " From #{self.unfiltered_params[:completed_at_gt]} to #{self.unfiltered_params[:completed_at_lt]}"
-        elsif self.unfiltered_params[:completed_at_gt] != ''
-          self.date_text += " After #{self.unfiltered_params[:completed_at_gt]}"
-        elsif self.unfiltered_params[:completed_at_lt] != ''
-          self.date_text += " Before #{self.unfiltered_params[:completed_at_lt]}"
+        completed_at_gt = self.unfiltered_params[:completed_at_gt]
+        completed_at_lt = self.unfiltered_params[:completed_at_lt]
+
+        if completed_at_gt.present? && completed_at_lt.present?
+          self.date_text += "<span> Od #{DateTime.parse(completed_at_gt).strftime("%m/%d/%Y")} do #{DateTime.parse(completed_at_lt).strftime("%m/%d/%Y")} </span>"
+        elsif completed_at_gt.present?
+          self.date_text += "<span> Po #{DateTime.parse(completed_at_gt).strftime("%m/%d/%Y")} </span>"
+        elsif completed_at_lt.present?
+          self.date_text += "<span> Pred #{DateTime.parse(completed_at_lt).strftime("%m/%d/%Y")} </span>"
         else
-          self.date_text += " All"
+          self.date_text += "<span> Vse </span>"
         end
+
       else
-        self.date_text += " All"
+        self.date_text += "<span> Vse </span>"
       end
+
     end
 
     def download_url(base, format, report_type = nil)
