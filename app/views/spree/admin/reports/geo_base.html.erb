@@ -66,7 +66,6 @@
 <%= render :partial => 'spree/admin/reports/advanced_report_criteria', :locals => {} %>
 
 <% [:state, :country].each do |type| %>
-<%binding.pry%>
     <div id="<%= type.to_s %>_data" <%= 'style=display:none;' if type != :state %> class="advanced_reporting_data">
         <div id="<%= type.to_s %>_canvas" class="canvas"></div>
         <%= raw @report.ruportdata[type].to_html %>
