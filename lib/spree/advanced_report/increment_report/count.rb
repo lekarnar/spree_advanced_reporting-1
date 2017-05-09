@@ -1,6 +1,6 @@
 class Spree::AdvancedReport::IncrementReport::Count < Spree::AdvancedReport::IncrementReport
   def name
-    "Order Count"
+    "Število Naročil"
   end
 
   def column
@@ -8,7 +8,7 @@ class Spree::AdvancedReport::IncrementReport::Count < Spree::AdvancedReport::Inc
   end
 
   def description
-    "Total number of completed orders"
+    "Skupno število zaključenih naročil"
   end
 
   def initialize(params)

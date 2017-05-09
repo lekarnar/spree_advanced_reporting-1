@@ -41,23 +41,25 @@
 
         function drawMaps() {
         <% [:state, :country].each do |type| %>
+          <% if @report.ruportdata[type].size > 0 %>
             var data_<%= type.to_s %> = new google.visualization.DataTable();
             data_<%= type.to_s %>.addRows(<%= @report.ruportdata[type].size %>);
             data_<%= type.to_s %>.addColumn('string', '<%= type.to_s.capitalize %>');
             data_<%= type.to_s %>.addColumn('number', '<%= @report.column %>');
-          <% @report.ruportdata[type].each_with_index do |p, i| %>
-            data_<%= type.to_s %>.setValue(<%= i.to_s %>, 0, "<%= p.data[type.to_s.capitalize] %>");
-            data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p.data[@report.column].to_s.gsub(/^\$/, '') %>);
+            <% @report.ruportdata[type].each_with_index do |p, i| %>
+              data_<%= type.to_s %>.setValue(<%= i.to_s %>, 0, "<%= p.data[type.to_s.capitalize] %>");
+              data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p.data[@report.column].to_s.gsub(/^\€/, '') %>);
+            <% end %>
+
+              var options_<%= type.to_s %> = { 'width' : '800px', 'height' : '500px' };
+            <% if type == :state %>
+              options_<%= type.to_s %>['region'] = 'US';
+            <% end %>
+
+            var <%= type.to_s %>_container = document.getElementById('<%= type.to_s %>_canvas');
+            var <%= type.to_s %>_geomap = new google.visualization.GeoMap(<%= type.to_s %>_container);
+            <%= type.to_s %>_geomap.draw(data_<%= type.to_s %>, options_<%= type.to_s %>);
           <% end %>
-
-          var options_<%= type.to_s %> = { 'width' : '800px', 'height' : '500px' };
-        <% if type == :state %>
-          options_<%= type.to_s %>['region'] = 'US';
-        <% end %>
-
-        var <%= type.to_s %>_container = document.getElementById('<%= type.to_s %>_canvas');
-        var <%= type.to_s %>_geomap = new google.visualization.GeoMap(<%= type.to_s %>_container);
-        <%= type.to_s %>_geomap.draw(data_<%= type.to_s %>, options_<%= type.to_s %>);
       <% end %>
       };
 </script>
