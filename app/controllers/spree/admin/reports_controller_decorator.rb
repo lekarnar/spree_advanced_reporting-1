@@ -100,13 +100,13 @@ Spree::Admin::ReportsController.class_eval do
       :profit,
       :revenue,
       :units,
-      :subscriptions,
-      :subscription_seats_in_use,
-      :subscription_revenue,
+      # :subscriptions,
+      # :subscription_seats_in_use,
+      # :subscription_revenue,
       :top_products,
       :top_customers,
-      :geo_revenue,
-      :geo_units,
+      # :geo_revenue,
+      # :geo_units,
       :count,
       :order_details
     ]

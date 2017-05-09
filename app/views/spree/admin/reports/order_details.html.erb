@@ -1,5 +1,5 @@
 <% content_for :page_title do %>
-  Order Details,
+  <%= Spree.t('order_details') %>,
   <% if params[:begin_date] && params[:end_date] %>
     <%= params[:begin_date] %> to <%= params[:end_date] %>
   <% else %>
@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="form-group">
-        <%= label_tag 'begin_date', t(:start), class: 'inline' %>
+        <%= label_tag 'begin_date', Spree.t(:start), class: 'inline' %>
         <%= text_field_tag 'begin_date',
           (Time.now - 1.month).beginning_of_day.strftime('%Y/%m/%d'),
           {
@@ -25,7 +25,7 @@
       </div>
 
       <div class="form-group">
-        <%= label_tag 'end_date', t(:end), class: 'inline' %>
+        <%= label_tag 'end_date', Spree.t(:end), class: 'inline' %>
         <%= text_field_tag 'end_date',
           Time.now.end_of_day.strftime('%Y/%m/%d'),
           {

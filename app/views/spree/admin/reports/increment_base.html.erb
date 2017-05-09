@@ -48,7 +48,7 @@
           data_<%= type.to_s %>.addRows(<%= @report.ruportdata[type].size %>);
         <% @report.ruportdata[type].data.reverse.each_with_index do |p, i| %>
           data_<%= type.to_s %>.setValue(<%= i.to_s %>, 0, "<%= p[type.to_s.capitalize] %>");
-          data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p[@report.column].to_s.gsub(/^\$/, '') %>);
+          data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p[@report.column].to_s.gsub(/^\€/, '') %>);
         <% end %>
           var chart_<%= type.to_s %> = new google.visualization.ColumnChart(document.getElementById('<%= type.to_s %>_chart'));
           chart_<%= type.to_s %>.draw(data_<%= type.to_s %>, {
