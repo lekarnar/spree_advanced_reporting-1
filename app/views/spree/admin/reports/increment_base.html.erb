@@ -46,7 +46,7 @@
           data_<%= type.to_s %>.addColumn('string', 'Display');
           data_<%= type.to_s %>.addColumn('number', '<%= @report.name %>');
           data_<%= type.to_s %>.addRows(<%= @report.ruportdata[type].size %>);
-        <% @report.ruportdata[type].data.reverse.each_with_index do |p, i| %>
+        <% @report.ruportdata[type].data.each_with_index do |p, i| %>
           data_<%= type.to_s %>.setValue(<%= i.to_s %>, 0, "<%= p[type.to_s.capitalize] %>");
           data_<%= type.to_s %>.setValue(<%= i.to_s %>, 1, <%= p[@report.column].to_s.gsub(/^\€/, '') %>);
         <% end %>

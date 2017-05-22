@@ -5,7 +5,7 @@ Spree::Core::Engine.add_routes do
         get :revenue
         get :count
         get :units
-        get :profit
+        # get :profit
         # get :subscriptions
         # get :subscription_seats_in_use
         # get :subscription_revenue

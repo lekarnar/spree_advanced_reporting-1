@@ -97,7 +97,7 @@ Spree::Admin::ReportsController.class_eval do
   def actions
     [
       :daily_details,
-      :profit,
+      # :profit,
       :revenue,
       :units,
       # :subscriptions,
