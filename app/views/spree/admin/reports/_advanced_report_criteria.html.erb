@@ -12,7 +12,7 @@
       <div id="taxon_products">
       <% if @taxons %>
         <div class="col-sm-12">
-          <label><%= t :taxons %>:</label>
+          <label><%= Spree.t('taxons') %>:</label>
           <%= collection_select(:advanced_reporting, :taxon_id, @taxons, :id, :name, { :include_blank => 'Vsi' }, { class: 'select2' } ) %>
         </div>
       <% end %>

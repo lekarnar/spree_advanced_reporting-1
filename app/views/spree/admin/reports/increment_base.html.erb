@@ -26,7 +26,7 @@
 <ul id="show_data">
   <% @report.increments.each do |inc| %>
     <li <%= 'class=selected' if inc == :daily %> id="<%= inc.to_s %>">
-      <label><%= inc.to_s.capitalize %></label><br />
+      <label><%= Spree.t(inc.to_s) %></label><br />
       <a href="<%= @report.download_url(request.path, 'csv', inc.to_s) %>">CSV</a>
     </li>
   <% end %>
@@ -56,7 +56,7 @@
               height: 400,
               legend: 'none',
               hAxis: { slantedText: true, slantedTextAngle: 30 },
-              title: '<%= type.to_s.capitalize + ' ' + @report.name %>'
+              title: '<%= Spree.t(type.to_s. + "_" + @report.name) %>'
           });
       <% end %>
       }

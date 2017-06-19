@@ -87,7 +87,7 @@
 </table>
 
 <div id='payments'>
-  <h2><%= pluralize(@report.payments.count, 'Payment') %></h2>
+  <h2><%= plural_resource_name(Spree::Payment) %></h2>
 
   <% if @report.payments.present? %>
     <a href='#' data-details='payment_details'><%= Spree.t('show_details') %></a>
@@ -110,7 +110,7 @@
       <% end -%>
       </tr>
       <tr class='totals'>
-        <td>Totals:</td>
+        <td><%= Spree.t('totals') %>:</td>
         <td class='count'><%= payments_count %></td>
         <td class='amount'><%= number_to_currency(payments_total) %></td>
       </tr>
@@ -138,13 +138,13 @@
       <% end %>
     </table>
   <% else %>
-    No payments found
+    <%= Spree.t('no_payments_found') %>
   <% end %>
 </div>
 
 <% if @report.orders.present? %>
   <div id='orders'>
-    <h2><%= pluralize(@report.orders.count, 'Order') %></h2>
+    <h2><%= plural_resource_name(Spree::Order) %></h2>
     <a href='#' data-details='orders_details'><%= Spree.t('show_details') %></a>
     <table class='table' id='orders_details'>
       <tr>
@@ -171,9 +171,9 @@
 
 <% if @report.shipments.present? %>
   <div id='shipments'>
-    <h2><%= pluralize(@report.shipments.count, 'Shipment') %></h2>
+    <h2><%= plural_resource_name(Spree::Shipment) %></h2>
 
-    <a href='#' data-details='shipments_details'>Show details...</a>
+    <a href='#' data-details='shipments_details'><%= Spree.t('show_details') %></a>
     <table class='table' id='shipments_details'>
       <tr>
         <th><%= Spree.t('order') %></th>
@@ -196,14 +196,14 @@
 
 <% if @report.tax_adjustments.present? %>
   <div id='tax_adjustments'>
-    <h2><%= pluralize(@report.tax_adjustments.count, 'Tax Adjustment') %></h2>
+    <h2><%= 'Davek prilagoditve' %></h2>
 
     <a href='#' data-details='tax_adjustments_details'><%= Spree.t('show_details') %></a>
     <table class='table' id='tax_adjustments_details'>
       <tr>
-        <th>Order</th>
-        <th>Adjustment</th>
-        <th>Amount</th>
+        <th><%= Spree.t('order') %></th>
+        <th><%= Spree.t('adjustments') %></th>
+        <th><%= Spree.t('amount') %></th>
       </tr>
 
       <% @report.tax_adjustments.sort{|a,b| a.created_at <=> b.created_at}.each do |adjustment| %>
@@ -219,7 +219,7 @@
 
 <% if @report.price_adjustments.present? %>
   <div id='price_adjustments'>
-    <h2><%= pluralize(@report.price_adjustments.count, 'Price Adjustment') %></h2>
+    <h2><%= Spree.t('price_adjustments') %></h2>
 
     <a href='#' data-details='price_adjustments_details'><%= Spree.t('show_details') %></a>
     <table class='table' id='price_adjustments_details'>
@@ -242,7 +242,7 @@
 
 <% if @report.other_adjustments.present? %>
   <div id='other_adjustments'>
-    <h2><%= pluralize(@report.other_adjustments.count, 'Other Adjustment') %></h2>
+    <h2><%= Spree.t('other_adjustments') %></h2>
 
     <a href='#' data-details='other_adjustments_details'><%= Spree.t('show_details') %></a>
     <table class='table' id='other_adjustments_details'>
