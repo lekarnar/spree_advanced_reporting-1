@@ -27,10 +27,10 @@
             <div id="recent_orders">
                 <table class=" table tablesorter">
                     <thead><tr>
-                            <th><%=t(:order_number)%></th>
-                            <th><%=t(:order)%></th>
+                            <th><%=Spree.t(:order_number)%></th>
+                            <th><%=Spree.t(:order)%></th>
                             <th><%=t("adv_report.items_count")%></th>
-                            <th><%=t(:total)%></th>
+                            <th><%=Spree.t(:total)%></th>
                     </tr></thead>
                     <% @last_orders.each do |order| %>
                         <tr class="odd">

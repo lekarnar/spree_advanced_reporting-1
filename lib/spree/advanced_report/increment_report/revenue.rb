@@ -8,7 +8,7 @@ class Spree::AdvancedReport::IncrementReport::Revenue < Spree::AdvancedReport::I
   end
 
   def description
-    "The sum of order item prices, excluding shipping and tax"
+    Spree.t('revenue_description')
   end
 
   def initialize(params)
@@ -24,7 +24,7 @@ class Spree::AdvancedReport::IncrementReport::Revenue < Spree::AdvancedReport::I
           :display => get_display(type, order.completed_at),
         }
       end
-      rev = order.item_total
+      rev = order.total
       if !self.product.nil? && product_in_taxon
         rev = order.line_items.select { |li| li.product == self.product }.inject(0) { |a, b| a += b.quantity * b.price }
       elsif !self.taxon.nil?

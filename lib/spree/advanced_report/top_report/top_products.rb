@@ -29,6 +29,6 @@ class Spree::AdvancedReport::TopReport::TopProducts < Spree::AdvancedReport::Top
       ruportdata << { "name" => data[k][:name], "Units" => data[k][:units], "Revenue" => data[k][:revenue] }
     end
     ruportdata.replace_column("Revenue") { |r| "€%0.2f" % r.Revenue }
-    ruportdata.rename_column("name", "Product Name")
+    ruportdata.rename_column("name", "Ime izdelka")
   end
 end

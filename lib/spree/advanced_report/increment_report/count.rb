@@ -1,6 +1,6 @@
 class Spree::AdvancedReport::IncrementReport::Count < Spree::AdvancedReport::IncrementReport
   def name
-    "Število Naročil"
+    "Count"
   end
 
   def column

@@ -27,6 +27,6 @@ class Spree::AdvancedReport::TopReport::TopCustomers < Spree::AdvancedReport::To
       ruportdata << { "email" => data[k][:email], "Units" => data[k][:units], "Revenue" => data[k][:revenue] }
     end
     ruportdata.replace_column("Revenue") { |r| "€%0.2f" % r.Revenue }
-    ruportdata.rename_column("email", "Customer Email")
+    ruportdata.rename_column("email", "Email")
   end
 end

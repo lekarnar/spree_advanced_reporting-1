@@ -34,22 +34,22 @@
           }
         %>
       </div>
-      <%= submit_tag 'Search', class: 'btn btn-success' %>
+      <%= submit_tag 'Išči', class: 'btn btn-success' %>
     </div>
   </div>
 <% end %>
 
-<%= link_to 'Download CSV', params.merge({format: 'csv'}) %>
+<%= link_to 'Prenesi CSV', params.merge({format: 'csv'}) %>
 
 <table class="table">
   <tr>
-    <th>Order Number</th>
-    <th>Completed</th>
+    <th><%= Spree.t('order_number') %></th>
+    <th><%= Spree.t('completed') %></th>
     <th>Sku</th>
-    <th>Quantity</th>
-    <th>Unit Price</th>
-    <th>Amount</th>
-    <th>Tranaction ID</th>
+    <th><%= Spree.t('quantitiy') %></th>
+    <th><%= Spree.t('unit_price') %></th>
+    <th><%= Spree.t('amount') %></th>
+    <th><%= Spree.t('transaction_id') %></th>
   </tr>
 
   <% @report.line_items.each_with_index do |line, index| %>
