@@ -16,23 +16,25 @@ class Spree::AdvancedReport::IncrementReport::Revenue < Spree::AdvancedReport::I
     self.total = 0
 
     self.orders.each do |order|
-      date = {}
-      INCREMENTS.each do |type|
-        date[type] = get_bucket(type, order.completed_at)
-        data[type][date[type]] ||= {
-          :value => 0,
-          :display => get_display(type, order.completed_at),
-        }
+      unless order.void?
+        date = {}
+        INCREMENTS.each do |type|
+          date[type] = get_bucket(type, order.completed_at)
+          data[type][date[type]] ||= {
+            :value => 0,
+            :display => get_display(type, order.completed_at),
+          }
+        end
+        rev = order.total
+        if !self.product.nil? && product_in_taxon
+          rev = order.line_items.select { |li| li.product == self.product }.inject(0) { |a, b| a += b.quantity * b.price }
+        elsif !self.taxon.nil?
+          rev = order.line_items.select { |li| li.product && li.product.taxons.include?(self.taxon) }.inject(0) { |a, b| a += b.quantity * b.price }
+        end
+        rev = 0 if !self.product_in_taxon
+        INCREMENTS.each { |type| data[type][date[type]][:value] += rev }
+        self.total += rev
       end
-      rev = order.total
-      if !self.product.nil? && product_in_taxon
-        rev = order.line_items.select { |li| li.product == self.product }.inject(0) { |a, b| a += b.quantity * b.price }
-      elsif !self.taxon.nil?
-        rev = order.line_items.select { |li| li.product && li.product.taxons.include?(self.taxon) }.inject(0) { |a, b| a += b.quantity * b.price }
-      end
-      rev = 0 if !self.product_in_taxon
-      INCREMENTS.each { |type| data[type][date[type]][:value] += rev }
-      self.total += rev
     end
 
     generate_ruport_data

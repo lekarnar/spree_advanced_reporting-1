@@ -11,14 +11,16 @@ class Spree::AdvancedReport::TopReport::TopCustomers < Spree::AdvancedReport::To
     super(params)
 
     orders.each do |order|
-      if order.user
-        data[order.user.id] ||= {
-          :email => order.user.email,
-          :revenue => 0,
-          :units => 0
-        }
-        data[order.user.id][:revenue] += revenue(order)
-        data[order.user.id][:units] += units(order)
+      unless order.void?
+        if order.user
+          data[order.user.id] ||= {
+            :email => order.user.email,
+            :revenue => 0,
+            :units => 0
+          }
+          data[order.user.id][:revenue] += revenue(order)
+          data[order.user.id][:units] += units(order)
+        end
       end
     end
 
