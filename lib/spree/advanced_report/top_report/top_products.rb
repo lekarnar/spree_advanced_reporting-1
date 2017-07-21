@@ -11,25 +11,28 @@ class Spree::AdvancedReport::TopReport::TopProducts < Spree::AdvancedReport::Top
     super(params)
 
     orders.each do |order|
-      order.line_items.each do |li|
-        if !li.product.nil?
-          rev = order.total
-          if !self.taxon.nil?
-            if li.product.taxons.include?(self.taxon)
+      unless order.void?
+        order.line_items.each do |li|
+          if !li.product.nil?
+
+            rev = order.total
+            if !self.taxon.nil?
+              if li.product.taxons.include?(self.taxon)
+                data[li.product.id] ||= {
+                  :name => li.product.name.to_s,
+                  :revenue => li.quantity*li.price,
+                  :units => li.quantity
+                }
+              end
+            else
               data[li.product.id] ||= {
                 :name => li.product.name.to_s,
-                :revenue => li.quantity*li.price,
-                :units => li.quantity
+                :revenue => 0,
+                :units => 0
               }
+              data[li.product.id][:revenue] += li.quantity*li.price
+              data[li.product.id][:units] += li.quantity
             end
-          else
-            data[li.product.id] ||= {
-              :name => li.product.name.to_s,
-              :revenue => 0,
-              :units => 0
-            }
-            data[li.product.id][:revenue] += li.quantity*li.price
-            data[li.product.id][:units] += li.quantity
           end
         end
       end
